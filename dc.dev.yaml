@@ -1,0 +1,33 @@
+version: "3"
+
+networks:
+  smart_design:
+    external: true
+
+
+services:
+  smart_design.aiohttp:
+    container_name: smart_design.aiohttp
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./smart_design_store:/app/smart_design_store
+      - ./tests:/app/tests
+      - ./setup.py:/app/setup.py
+    environment:
+      - MONGO_HOST
+      - MONGO_PORT
+      - DB_NAME
+    networks:
+      - smart_design
+    ports:
+      - 8080:8080
+
+  smart_design.mongo:
+    container_name: smart_design.mongo
+    image: mongo:4
+    networks:
+      - smart_design
+    ports:
+      - 27017:27017
